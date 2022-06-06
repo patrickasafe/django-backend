@@ -16,3 +16,6 @@ class ProductSerializer(serializers.Serializer):
         instance.ref = data.get('ref', instance.ref)
         instance.cost = data.get('cost', instance.cost)
         instance.price = data.get('price', instance.price)
+
+        instance.save()
+        return instance
