@@ -9,10 +9,8 @@
 # def product_list(request):
 
 
-
 # @api_view(['POST'])
 # def product_create(request):
-
 
 
 # @api_view(['GET', 'PUT', 'DELETE'])
@@ -20,8 +18,6 @@
 
 
 #     if request.method == 'GET':
-
-
 
 
 #     if request.method == 'DELETE':
@@ -43,7 +39,8 @@ class ProductList(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        return Response({'hello': 'friend' })
+        return Response({'hello': 'friend'})
+
 
 class ProductCreate(APIView):
     def post(self, request):
@@ -54,7 +51,8 @@ class ProductCreate(APIView):
         else:
             return Response(serializer.errors)
 
-class Product(APIView):
+
+class ProductDetail(APIView):
     def get_product_by_pk(self, pk):
         try:
             product = Product.objects.get(pk=pk)
@@ -64,7 +62,7 @@ class Product(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
     def get(self, request, pk):
-        book = self.get_product_by_pk(pk)
+        product = self.get_product_by_pk(pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
