@@ -26,10 +26,21 @@ def product_create(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def product(request, pk):
+    product = Product.objects.get(pk=pk)
+
     if request.method == 'GET':
-        product = Product.objects.get(pk=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
     if request.method == 'PUT':
         serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return serializer.errors
+
+    if request.method == 'DELETE':
+        product.delete()
+        return Response({
+            'delete': True
+        })
