@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework import status
 from backend_api.models import Product
 from backend_api.serializer import ProductSerializer
 
@@ -26,7 +27,12 @@ def product_create(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def product(request, pk):
-    product = Product.objects.get(pk=pk)
+    try:
+        product = Product.objects.get(pk=pk)
+    except:
+        return Response({
+            'error': 'Product does not exist'
+        }, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = ProductSerializer(product)
@@ -37,10 +43,8 @@ def product(request, pk):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return serializer.errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'DELETE':
         product.delete()
-        return Response({
-            'delete': True
-        })
+        return Response(status=status.HTTP_204_NO_CONTENT)
